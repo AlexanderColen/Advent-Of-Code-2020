@@ -18,24 +18,16 @@ namespace AdventOfCode2020.Day01
         public void Puzzle1()
         {
             int solution = 0;
-            List<int> checks = new List<int>();
+            input.Sort();
             while (solution == 0) {
                 foreach (var i in input)
                 {
-                    if (i > 2020)
+                    foreach (var j in input)
                     {
-                        continue;
-                    }
-                    else
-                    {
-                        foreach (var j in checks)
+                        if (i + j == 2020)
                         {
-                            if (i + j == 2020)
-                            {
-                                solution = i * j;
-                            }
+                            solution = i * j;
                         }
-                        checks.Add(i);
                     }
                 }
             }
@@ -45,29 +37,19 @@ namespace AdventOfCode2020.Day01
         public void Puzzle2()
         {
             int solution = 0;
-            List<int> checksI = new List<int>();
-            List<int> checksJ = new List<int>();
+            input.Sort();
             while (solution == 0) {
                 foreach (var i in input)
                 {
-                    if (i > 2020)
+                    foreach (var j in input)
                     {
-                        continue;
-                    }
-                    else
-                    {
-                        foreach (var j in checksI)
+                        foreach (var k in input)
                         {
-                            foreach (var k in checksJ)
+                            if (i + j + k == 2020)
                             {
-                                if (i + j + k == 2020)
-                                {
-                                    solution = i * j * k;
-                                }
+                                solution = i * j * k;
                             }
-                            checksJ.Add(j);
                         }
-                        checksI.Add(i);
                     }
                 }
             }
