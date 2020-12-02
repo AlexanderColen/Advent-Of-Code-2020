@@ -34,6 +34,14 @@ namespace AdventOfCode2020.Day02
         {
             int solution = 0;
 
+            foreach (var i in inputs)
+            {
+                if ((i.Password[i.Min - 1] == i.Character && i.Password[i.Max - 1] != i.Character) || (i.Password[i.Min - 1] != i.Character && i.Password[i.Max - 1] == i.Character))
+                {
+                    solution++;
+                }
+            }
+
             Console.WriteLine($"Puzzle 2 solution: {solution}");
         }
 
