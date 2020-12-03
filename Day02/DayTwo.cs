@@ -20,7 +20,8 @@ namespace AdventOfCode2020.Day02
         {
             int solution = 0;
 
-            foreach (var i in inputs) {
+            foreach (var i in inputs)
+            {
                 if (i.Password.Where(x => (x == i.Character)).Count() >= i.Min && i.Password.Where(x => (x == i.Character)).Count() <= i.Max)
                 {
                     solution++;
