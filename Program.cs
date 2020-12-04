@@ -1,6 +1,7 @@
 ﻿using AdventOfCode2020.Day01;
 using AdventOfCode2020.Day02;
 using AdventOfCode2020.Day03;
+using AdventOfCode2020.Day04;
 using System;
 
 namespace AdventOfCode2020
@@ -23,6 +24,10 @@ namespace AdventOfCode2020
 
                     case "3":
                         new DayThree();
+                        break;
+
+                    case "4":
+                        new DayFour();
                         break;
 
                     default:
