@@ -1,8 +1,8 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace AdventOfCode2020.Day04
 {
@@ -78,10 +78,9 @@ namespace AdventOfCode2020.Day04
                             // Height: between 150 and 193 if followed by 'cm' or between 59 and 76 followed by 'in' inclusive.
                             else if (kv.Key == "hgt")
                             {
-                                if (kv.Value.EndsWith("cm") && int.Parse(kv.Value.Replace("cm", "")) >= 150 && int.Parse(kv.Value.Replace("cm", "")) <= 193) {
-                                    validFields++;
-                                }
-                                else if (kv.Value.EndsWith("in") && int.Parse(kv.Value.Replace("in", "")) >= 59 && int.Parse(kv.Value.Replace("in", "")) <= 76) {
+                                Regex r = new Regex(@"(^1(([5-8][0-9])|(9[0-3]))cm$)|(^(59|(6[0-9])|(7[0-6]))in$)");
+                                if (r.IsMatch(kv.Value))
+                                {
                                     validFields++;
                                 }
                             }

@@ -7,8 +7,8 @@ namespace AdventOfCode2020.Day05
 {
     public class DayFive : IDay
     {
-        List<string> boardingPasses = new List<string>();
-        List<int> foundSeats = new List<int>();
+        private readonly List<string> boardingPasses = new List<string>();
+        private readonly List<int> foundSeats = new List<int>();
 
         public DayFive()
         {
@@ -46,8 +46,10 @@ namespace AdventOfCode2020.Day05
                 // Skip the first one.
                 if (i != 0)
                 {
+                    // If the difference between the previous seat and the next seat is not 2, one of them is missing.
                     if (foundSeats[i + 1] - foundSeats[i - 1] != 2)
                     {
+                        // Add one because the seat after this one is missing since we're iterating in order.
                         solution = foundSeats[i] + 1;
                         break;
                     }
@@ -73,6 +75,7 @@ namespace AdventOfCode2020.Day05
 
             foreach (var c in instructions)
             {
+                // F & L are lower half, B & R are upper half.
                 if (c == 'F' || c == 'L')
                 {
                     range = range.Take(range.Count / 2).ToList();
