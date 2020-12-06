@@ -36,31 +36,18 @@ namespace AdventOfCode2020.Day06
             // Loop over every group.
             foreach (var g in groupAnswers)
             {
-                var encountered = new Dictionary<char, int>();
-                // Loop over every answer in this group.
-                foreach (var a in g)
+                IEnumerable<char> intersection = g[0];
+
+                // Get the intersection of all lists.
+                for (int i = 0; i < g.Count; i++)
                 {
-                    // Loop over every character in this answer.
-                    foreach (var c in a)
+                    if (i + 1 <= g.Count - 1)
                     {
-                        if (encountered.Keys.Contains(c))
-                        {
-                            encountered[c]++;
-                        } else
-                        {
-                            encountered.Add(c, 1);
-                        }
+                        intersection = intersection.Intersect(g[i + 1]).ToList();
                     }
                 }
 
-                // Loop over dictionary.
-                foreach (var k in encountered.Keys)
-                {
-                    if (encountered[k] == g.Count)
-                    {
-                        solution++;
-                    }
-                }
+                solution += intersection.Count();
             }
 
             Console.WriteLine($"Puzzle 2 solution: {solution}");
