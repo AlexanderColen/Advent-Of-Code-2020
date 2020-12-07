@@ -43,6 +43,17 @@ namespace AdventOfCode2020.Day07
         {
             var solution = 0;
 
+            foreach (var rule in rules)
+            {
+                // Skip useless rules.
+                if (!rule.StartsWith("shiny gold")) {
+                    continue;
+                }
+
+                var shinyGoldBag = CreateBag(rule);
+                solution = CountTotalBags(shinyGoldBag);
+            }
+
             Console.WriteLine($"Puzzle 2 solution: {solution}");
         }
 
@@ -107,6 +118,18 @@ namespace AdventOfCode2020.Day07
                         break;
                     }
                 }
+            }
+
+            return count;
+        }
+
+        private int CountTotalBags(Bag bag)
+        {
+            var count = 0;
+
+            foreach (var b in bag.Contents)
+            {
+                count += b.Item2 + b.Item2 * CountTotalBags(b.Item1);
             }
 
             return count;
