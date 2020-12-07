@@ -8,7 +8,6 @@ namespace AdventOfCode2020.Day07
     public class DaySeven : IDay
     {
         private readonly List<string> rules = new List<string>();
-        private readonly List<Bag> bags = new List<Bag>();
 
         public DaySeven()
         {
@@ -28,12 +27,7 @@ namespace AdventOfCode2020.Day07
                     continue;
                 }
 
-                bags.Add(CreateBag(rule));
-            }
-
-            foreach (var bag in bags)
-            {
-                solution += CountBagContents(bag);
+                solution += CountBagContents(CreateBag(rule));
             }
 
             Console.WriteLine($"Puzzle 1 solution: {solution}");
