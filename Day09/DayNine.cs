@@ -25,9 +25,9 @@ namespace AdventOfCode2020.Day09
 
         public void Puzzle2()
         {
-            var solution = 0;
+            var solution = FindContiguousSet(CheckPreamble(25));
 
-            Console.WriteLine($"Puzzle 2 solution: {solution}");
+            Console.WriteLine($"Puzzle 2 solution: {solution.Min() + solution.Max()}");
         }
 
         public void ReadInput()
@@ -73,6 +73,32 @@ namespace AdventOfCode2020.Day09
             }
 
             return found;
+        }
+
+        private List<long> FindContiguousSet(long magicNumber)
+        {
+            List<long> contiguousSet;
+            long current;
+
+            for (var i = 0; i < xmas.Count; i++)
+            {
+                contiguousSet = new List<long>() { xmas[i] };
+                current = xmas[i];
+                for (var j = i + 1; j < xmas.Skip(1).Count(); j++)
+                {
+                    contiguousSet.Add(xmas[j]);
+                    current += xmas[j];
+                    if (current == magicNumber && contiguousSet.Count > 1)
+                    {
+                        return contiguousSet;
+                    } else if (current > magicNumber)
+                    {
+                        break;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }
