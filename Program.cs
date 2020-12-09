@@ -1,12 +1,4 @@
-﻿using AdventOfCode2020.Day01;
-using AdventOfCode2020.Day02;
-using AdventOfCode2020.Day03;
-using AdventOfCode2020.Day04;
-using AdventOfCode2020.Day05;
-using AdventOfCode2020.Day06;
-using AdventOfCode2020.Day07;
-using AdventOfCode2020.Day08;
-using System;
+﻿using System;
 
 namespace AdventOfCode2020
 {
@@ -16,38 +8,43 @@ namespace AdventOfCode2020
         {
             if (args.Length == 1)
             {
+                Console.WriteLine($"Day {args[0]}");
                 switch (args[0])
                 {
                     case "1":
-                        new DayOne();
+                        new Day01.DayOne();
                         break;
 
                     case "2":
-                        new DayTwo();
+                        new Day02.DayTwo();
                         break;
 
                     case "3":
-                        new DayThree();
+                        new Day03.DayThree();
                         break;
 
                     case "4":
-                        new DayFour();
+                        new Day04.DayFour();
                         break;
 
                     case "5":
-                        new DayFive();
+                        new Day05.DayFive();
                         break;
 
                     case "6":
-                        new DaySix();
+                        new Day06.DaySix();
                         break;
 
                     case "7":
-                        new DaySeven();
+                        new Day07.DaySeven();
                         break;
 
                     case "8":
-                        new DayEight();
+                        new Day08.DayEight();
+                        break;
+
+                    case "9":
+                        new Day09.DayNine();
                         break;
 
                     default:
