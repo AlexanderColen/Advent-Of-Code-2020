@@ -38,9 +38,31 @@ namespace AdventOfCode2020.Day10
 
         public void Puzzle2()
         {
-            var solution = 0;
+            joltages.Add(0);
+            joltages.Sort();
+            var routes = new long[joltages.Count];
+            // Populate array with zeroes. (Faster than Enumerable.Repeat!)
+            for (var x = 0; x < joltages.Count; x++)
+            {
+                routes[x] = 0;
+            }
+            routes[0] = 1;
 
-            Console.WriteLine($"Puzzle 2 solution: {solution}");
+            for (var i = 0; i < joltages.Count; i++)
+            {
+                for (var j = i + 1; j < joltages.Count; j++)
+                {
+                    if (joltages[j] - joltages[i] <= 3)
+                    {
+                        routes[j] += routes[i];
+                    } else
+                    {
+                        break;
+                    }
+                }
+            }
+
+            Console.WriteLine($"Puzzle 2 solution: {routes[^1]}");
         }
 
         public void ReadInput()
