@@ -25,12 +25,9 @@ namespace AdventOfCode2020.Day10
 
             foreach (var j in joltages)
             {
-                // Max difference allowed is 3.
-                if (j - current <= 3)
-                {
-                    joltDifferences.Add(j - current);
-                    current = j;
-                }
+                // Max difference in sorted input is 3, so no need to validate.
+                joltDifferences.Add(j - current);
+                current = j;
             }
 
             Console.WriteLine($"Puzzle 1 solution: {joltDifferences.Count(x => x == 1) * joltDifferences.Count(x => x == 3)}");
