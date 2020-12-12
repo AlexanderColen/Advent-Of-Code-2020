@@ -187,7 +187,7 @@ namespace AdventOfCode2020.Day11
                         continue;
                     }
 
-                    var visibleSeats = new List<Tuple<int, int>>();
+                    var occupied = 0;
                     // Look diagonal left up. ( < x , < y )
                     var visY = y - 1;
                     var visX = x - 1;
@@ -195,7 +195,7 @@ namespace AdventOfCode2020.Day11
                     {
                         if (arrangement[visY][visX] != '.')
                         {
-                            visibleSeats.Add(new Tuple<int, int>(visY, visX));
+                            occupied += arrangement[visY][visX] == '#' ? 1 : 0;
                             break;
                         }
                         visY--;
@@ -207,7 +207,7 @@ namespace AdventOfCode2020.Day11
                     {
                         if (arrangement[visY][x] != '.')
                         {
-                            visibleSeats.Add(new Tuple<int, int>(visY, x));
+                            occupied += arrangement[visY][x] == '#' ? 1 : 0;
                             break;
                         }
                     }
@@ -219,7 +219,7 @@ namespace AdventOfCode2020.Day11
                     {
                         if (arrangement[visY][visX] != '.')
                         {
-                            visibleSeats.Add(new Tuple<int, int>(visY, visX));
+                            occupied += arrangement[visY][visX] == '#' ? 1 : 0;
                             break;
                         }
                         visY--;
@@ -231,7 +231,7 @@ namespace AdventOfCode2020.Day11
                     {
                         if (arrangement[y][visX] != '.')
                         {
-                            visibleSeats.Add(new Tuple<int, int>(y, visX));
+                            occupied += arrangement[y][visX] == '#' ? 1 : 0;
                             break;
                         }
                     }
@@ -243,7 +243,7 @@ namespace AdventOfCode2020.Day11
                     {
                         if (arrangement[visY][visX] != '.')
                         {
-                            visibleSeats.Add(new Tuple<int, int>(visY, visX));
+                            occupied += arrangement[visY][visX] == '#' ? 1 : 0;
                             break;
                         }
                         visY++;
@@ -255,7 +255,7 @@ namespace AdventOfCode2020.Day11
                     {
                         if (arrangement[visY][x] != '.')
                         {
-                            visibleSeats.Add(new Tuple<int, int>(visY, x));
+                            occupied += arrangement[visY][x] == '#' ? 1 : 0;
                             break;
                         }
                     }
@@ -267,7 +267,7 @@ namespace AdventOfCode2020.Day11
                     {
                         if (arrangement[visY][visX] != '.')
                         {
-                            visibleSeats.Add(new Tuple<int, int>(visY, visX));
+                            occupied += arrangement[visY][visX] == '#' ? 1 : 0;
                             break;
                         }
                         visY++;
@@ -279,15 +279,9 @@ namespace AdventOfCode2020.Day11
                     {
                         if (arrangement[y][visX] != '.')
                         {
-                            visibleSeats.Add(new Tuple<int, int>(y, visX));
+                            occupied += arrangement[y][visX] == '#' ? 1 : 0;
                             break;
                         }
-                    }
-
-                    var occupied = 0;
-                    foreach (var visible in visibleSeats)
-                    {
-                        occupied += arrangement[visible.Item1][visible.Item2] == '#' ? 1 : 0;
                     }
 
                     /*
