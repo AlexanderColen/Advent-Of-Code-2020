@@ -86,9 +86,65 @@ namespace AdventOfCode2020.Day12
 
         public void Puzzle2()
         {
-            var solution = 0;
+            var waypointX = 10;
+            var waypointY = 1;
+            var boatX = 0;
+            var boatY = 0;
 
-            Console.WriteLine($"Puzzle 2 solution: {solution}");
+            foreach (var instruction in instructions)
+            {
+                // Rotate WAYPOINT right. (+degrees)
+                if (instruction.StartsWith("R"))
+                {
+                    for (int i = 0; i < int.Parse(instruction.Replace("R", "")) / 90; i++)
+                    {
+                        var newY = -waypointX;
+                        var newX = waypointY;
+                        waypointX = newX;
+                        waypointY = newY;
+                    }
+                }
+                // Rotate WAYPOINT left. (-degrees)
+                else if (instruction.StartsWith("L"))
+                {
+                    for (int i = 0; i < int.Parse(instruction.Replace("L", "")) / 90; i++)
+                    {
+                        var newY = waypointX;
+                        var newX = -waypointY;
+                        waypointX = newX;
+                        waypointY = newY;
+                    }
+                }
+                // Move WAYPOINT north. (+y)
+                else if (instruction.StartsWith("N"))
+                {
+                    waypointY += int.Parse(instruction.Replace("N", ""));
+                }
+                // Move WAYPOINT south. (-y)
+                else if (instruction.StartsWith("S"))
+                {
+                    waypointY -= int.Parse(instruction.Replace("S", ""));
+                }
+                // Move WAYPOINT east. (+x)
+                else if (instruction.StartsWith("E"))
+                {
+                    waypointX += int.Parse(instruction.Replace("E", ""));
+                }
+                // Move WAYPOINT west. (-x)
+                else if (instruction.StartsWith("W"))
+                {
+                    waypointX -= int.Parse(instruction.Replace("W", ""));
+                }
+                // Move BOAT forward towards waypoint X times.
+                else if (instruction.StartsWith("F"))
+                {
+                    var movement = int.Parse(instruction.Replace("F", ""));
+                    boatX += movement * waypointX;
+                    boatY += movement * waypointY;
+                }
+            }
+
+            Console.WriteLine($"Puzzle 2 solution: {Math.Abs(boatX) + Math.Abs(boatY)}");
         }
 
         public void ReadInput()
