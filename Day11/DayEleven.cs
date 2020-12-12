@@ -28,8 +28,7 @@ namespace AdventOfCode2020.Day11
                 round++;
                 occupying = !occupying;
 
-                arrangement = ChangeSeats(arrangement, occupying);
-                //Console.WriteLine($"Round {round} - Occupied? {occupying} :\n{string.Join('\n', arrangement)}");
+                arrangement = ChangeSeatsOldRules(arrangement, occupying);
 
                 // Count occupied;
                 var count = 0;
@@ -50,6 +49,29 @@ namespace AdventOfCode2020.Day11
         public void Puzzle2()
         {
             var solution = 0;
+            var arrangement = seating;
+            var occupying = false;
+            var round = 0;
+            while (true)
+            {
+                // Increment and inverse.
+                round++;
+                occupying = !occupying;
+
+                arrangement = ChangeSeatsNewRules(arrangement, occupying);
+
+                // Count occupied;
+                var count = 0;
+                foreach (var row in arrangement)
+                {
+                    count += row.Count(x => x == '#');
+                }
+                if (count == solution)
+                {
+                    break;
+                }
+                solution = count;
+            }
 
             Console.WriteLine($"Puzzle 2 solution: {solution}");
         }
@@ -64,7 +86,7 @@ namespace AdventOfCode2020.Day11
             }
         }
 
-        private List<string> ChangeSeats(List<string> arrangement, bool occupying)
+        private List<string> ChangeSeatsOldRules(List<string> arrangement, bool occupying)
         {
             var changedArrangement = new List<string>();
             for (var y = 0; y < arrangement.Count; y++) {
@@ -118,7 +140,7 @@ namespace AdventOfCode2020.Day11
                     }
 
                     /*
-                     * If occupying, a seat is empty with more than 4 occupied surrounding.
+                     * If occupying, a seat becomes empty with more than 4 occupied surrounding.
                      * Otherwise empty seats become occupied if 0 occupied surrounding.
                      */
                     if (occupying)
@@ -133,6 +155,156 @@ namespace AdventOfCode2020.Day11
                 changedArrangement.Add(newRow);
             }
 
+            return changedArrangement;
+        }
+
+        private List<string> ChangeSeatsNewRules(List<string> arrangement, bool occupying)
+        {
+            var changedArrangement = new List<string>();
+            for (var y = 0; y < arrangement.Count; y++)
+            {
+                var newRow = "";
+                for (var x = 0; x < arrangement[y].Length; x++)
+                {
+                    // Always skip dots.
+                    if (arrangement[y][x] == '.')
+                    {
+                        newRow += '.';
+                        continue;
+                    }
+
+                    // Skip L when not occupying.
+                    if (!occupying && arrangement[y][x] == 'L')
+                    {
+                        newRow += 'L';
+                        continue;
+                    }
+
+                    // Skip # when occupying.
+                    if (occupying && arrangement[y][x] == '#')
+                    {
+                        newRow += '#';
+                        continue;
+                    }
+
+                    var visibleSeats = new List<Tuple<int, int>>();
+                    // Look diagonal left up. ( < x , < y )
+                    var visY = y - 1;
+                    var visX = x - 1;
+                    while (visY > -1 && visX > -1)
+                    {
+                        if (arrangement[visY][visX] != '.')
+                        {
+                            visibleSeats.Add(new Tuple<int, int>(visY, visX));
+                            break;
+                        }
+                        visY--;
+                        visX--;
+                    }
+
+                    // Look up. ( = x , < y )
+                    for (visY = y - 1; visY > -1; visY--)
+                    {
+                        if (arrangement[visY][x] != '.')
+                        {
+                            visibleSeats.Add(new Tuple<int, int>(visY, x));
+                            break;
+                        }
+                    }
+
+                    // Look diagonal right up. ( > x, < y )
+                    visY = y - 1;
+                    visX = x + 1;
+                    while (visY > -1 && visX < arrangement[y].Length)
+                    {
+                        if (arrangement[visY][visX] != '.')
+                        {
+                            visibleSeats.Add(new Tuple<int, int>(visY, visX));
+                            break;
+                        }
+                        visY--;
+                        visX++;
+                    }
+
+                    // Look right. ( > x , = y )
+                    for (visX = x + 1; visX < arrangement[y].Length; visX++)
+                    {
+                        if (arrangement[y][visX] != '.')
+                        {
+                            visibleSeats.Add(new Tuple<int, int>(y, visX));
+                            break;
+                        }
+                    }
+
+                    // Look diagonal right down. ( > x , > y )
+                    visY = y + 1;
+                    visX = x + 1;
+                    while (visY < arrangement.Count && visX < arrangement[y].Length)
+                    {
+                        if (arrangement[visY][visX] != '.')
+                        {
+                            visibleSeats.Add(new Tuple<int, int>(visY, visX));
+                            break;
+                        }
+                        visY++;
+                        visX++;
+                    }
+
+                    // Look down. ( = x , > y )
+                    for (visY = y + 1; visY < arrangement.Count; visY++)
+                    {
+                        if (arrangement[visY][x] != '.')
+                        {
+                            visibleSeats.Add(new Tuple<int, int>(visY, x));
+                            break;
+                        }
+                    }
+
+                    // Look diagonal left down. ( < x , > y )
+                    visY = y + 1;
+                    visX = x - 1;
+                    while (visY < arrangement.Count && visX > -1)
+                    {
+                        if (arrangement[visY][visX] != '.')
+                        {
+                            visibleSeats.Add(new Tuple<int, int>(visY, visX));
+                            break;
+                        }
+                        visY++;
+                        visX--;
+                    }
+
+                    // Look left. ( < x , = y)
+                    for (visX = x - 1; visX > -1; visX--)
+                    {
+                        if (arrangement[y][visX] != '.')
+                        {
+                            visibleSeats.Add(new Tuple<int, int>(y, visX));
+                            break;
+                        }
+                    }
+
+                    var occupied = 0;
+                    foreach (var visible in visibleSeats)
+                    {
+                        occupied += arrangement[visible.Item1][visible.Item2] == '#' ? 1 : 0;
+                    }
+
+                    /*
+                     * If occupying, a seat becomes empty with more than 5 occupied visible.
+                     * Otherwise empty seats become occupied if 0 occupied visible.
+                     */
+                    if (occupying)
+                    {
+                        newRow += occupied > 0 ? 'L' : '#';
+                    } else
+                    {
+                        newRow += occupied >= 5 ? 'L' : '#';
+                    }
+                }
+
+                changedArrangement.Add(newRow);
+            }
             return changedArrangement;
         }
     }
