@@ -38,6 +38,23 @@ namespace AdventOfCode2020.Day13
         public void Puzzle2()
         {
             var solution = 0;
+            var busAndDelay = new List<Tuple<int, int>>();
+            var delay = 0;
+            // Calculate how long each bus needs is delayed after the previous bus.
+            foreach (var bus in busses)
+            {
+                if (bus == "x")
+                {
+                    delay++;
+                    continue;
+                }
+
+                busAndDelay.Add(new Tuple<int, int>(int.Parse(bus), delay));
+
+                delay = 1;
+            }
+
+            // TODO: Chinese Remainder Theorem.
 
             Console.WriteLine($"Puzzle 2 solution: {solution}");
         }
