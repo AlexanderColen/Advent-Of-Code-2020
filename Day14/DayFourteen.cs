@@ -20,14 +20,14 @@ namespace AdventOfCode2020.Day14
         public void Puzzle1()
         {
             ulong solution = 0;
-            var defaultMask = "000000000000000000000000000000000000".ToCharArray();
+            var defaultMask = "".PadLeft(64, '0').ToCharArray();
 
             foreach (var instruction in instructions)
             {
                 // Overwrite bits in mask.
                 if (instruction.StartsWith("mask"))
                 {
-                    var bits = instruction[7..];
+                    var bits = instruction[7..].PadLeft(64, '0');
                     // Overwrite default mask.
                     for (var i = 0; i < bits.Length; i++)
                     {
@@ -38,7 +38,7 @@ namespace AdventOfCode2020.Day14
                     }
 
                     var newMemory = new Dictionary<int, string>();
-                    // Overwrite
+                    // Overwrite in address.
                     foreach (var address in memory.Keys)
                     {
                         var mask = memory[address].ToCharArray();
@@ -65,7 +65,7 @@ namespace AdventOfCode2020.Day14
                         memory.Add(address, string.Join("", defaultMask));
                     }
 
-                    memory[address] = Convert.ToString(Convert.ToInt64(memory[address], 2) + long.Parse(value), 2);
+                    memory[address] = Convert.ToString(Convert.ToInt64(memory[address], 2) + long.Parse(value), 2).PadLeft(64, '0');
                 }
             }
 
