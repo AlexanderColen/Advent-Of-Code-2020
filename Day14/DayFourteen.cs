@@ -10,6 +10,7 @@ namespace AdventOfCode2020.Day14
     {
         private readonly List<string> instructions = new List<string>();
         private Dictionary<int, string> memory = new Dictionary<int, string>();
+        private Dictionary<string, ulong> memory2 = new Dictionary<string, ulong>();
 
         public DayFourteen()
         {
@@ -58,7 +59,30 @@ namespace AdventOfCode2020.Day14
 
         public void Puzzle2()
         {
-            var solution = 0;
+            var mask = "0";
+
+            foreach (var instruction in instructions)
+            {
+                // Change mask.
+                if (instruction.StartsWith("mask"))
+                {
+                    mask = instruction[7..].PadLeft(64, '0');
+                }
+                // Write value to memory.
+                else if (instruction.StartsWith("mem"))
+                {
+                    var matches = new Regex(@"\d+").Matches(instruction);
+                    var originalAddress = Convert.ToString(int.Parse(matches[0].Value), 2).PadLeft(64, '0');
+                    var value = ulong.Parse(matches[1].Value);
+
+                    // Write for every address.
+                    foreach (var a in ChangeBits(mask, originalAddress.ToCharArray(), 0)) {
+                        memory2[a] = value;
+                    }
+                }
+            }
+            
+            ulong solution = memory2.Select(m => m.Value).Aggregate((a, b) => a + b);
 
             Console.WriteLine($"Puzzle 2 solution: {solution}");
         }
@@ -71,6 +95,37 @@ namespace AdventOfCode2020.Day14
             {
                 instructions.Add(line);
             }
+        }
+
+        private List<string> ChangeBits(string mask, char[] input, int currentIndex)
+        {
+            var addresses = new List<string>();
+
+            for (var i = currentIndex; i < mask.Length; i++)
+            {
+                // X bit (floating).
+                if (mask[i] == 'X')
+                {
+                    // Treat as a 1.
+                    var input1 = input;
+                    input1[i] = '1';
+                    addresses.AddRange(ChangeBits(mask, input1, i + 1));
+                    // Treat as a 0.
+                    var input0 = input;
+                    input0[i] = '0';
+                    addresses.AddRange(ChangeBits(mask, input0, i + 1));
+
+                }
+                // 1 bit (override)
+                else if (mask[i] == '1')
+                {
+                    input[i] = '1';
+                }
+            }
+
+            addresses.Add(string.Join("", input));
+
+            return addresses;
         }
     }
 }
