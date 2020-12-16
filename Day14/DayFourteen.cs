@@ -9,8 +9,8 @@ namespace AdventOfCode2020.Day14
     public class DayFourteen : IDay
     {
         private readonly List<string> instructions = new List<string>();
-        private Dictionary<int, string> memory = new Dictionary<int, string>();
-        private Dictionary<string, ulong> memory2 = new Dictionary<string, ulong>();
+        private readonly Dictionary<int, string> memory = new Dictionary<int, string>();
+        private readonly Dictionary<string, ulong> memory2 = new Dictionary<string, ulong>();
 
         public DayFourteen()
         {

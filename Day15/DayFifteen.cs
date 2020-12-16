@@ -8,7 +8,7 @@ namespace AdventOfCode2020.Day15
     public class DayFifteen : IDay
     {
         private readonly List<int> spokenNumbers = new List<int>();
-        private Dictionary<int, Tuple<int, int>> numbers = new Dictionary<int, Tuple<int, int>>();
+        private readonly Dictionary<int, Tuple<int, int>> numbers = new Dictionary<int, Tuple<int, int>>();
 
         public DayFifteen()
         {
