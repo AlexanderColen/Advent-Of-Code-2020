@@ -1,16 +1,26 @@
-﻿namespace AdventOfCode2020.Day16
+﻿using System.Collections.Generic;
+
+namespace AdventOfCode2020.Day16
 {
     public class TicketField
     {
-        public string field { get; set; }
-        public int min1 { get; set; }
-        public int max1 { get; set; }
-        public int min2 { get; set; }
-        public int max2 { get; set; }
+        public string Field { get; set; }
+        public int Min1 { get; set; }
+        public int Max1 { get; set; }
+        public int Min2 { get; set; }
+        public int Max2 { get; set; }
+        public List<List<int>> Possibles { get; set; }
+        public HashSet<int> Intersection { get; set; }
+
+        public TicketField()
+        {
+            Possibles = new List<List<int>>();
+            Intersection = new HashSet<int>();
+        }
 
         public bool IsValid(int value)
         {
-            return (value >= min1 && value <= max1) || (value >= min2 && value <= max2);
+            return (value >= Min1 && value <= Max1) || (value >= Min2 && value <= Max2);
         }
     }
 }
