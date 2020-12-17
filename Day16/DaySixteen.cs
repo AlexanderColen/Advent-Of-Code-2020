@@ -48,7 +48,7 @@ namespace AdventOfCode2020.Day16
         {
             long solution = 1;
             
-            // Determine field order.
+            // Find all possible fields for a ticket value.
             for (var i = 0; i < otherTickets.Count; i++)
             {
                 // Ignore faulty tickets.
@@ -65,22 +65,14 @@ namespace AdventOfCode2020.Day16
                             }
                         }
                         field.Possibles.Add(possible);
+                        field.Intersection = field.Possibles.Skip(1).Aggregate(new HashSet<int>(field.Possibles.First()),(h, e) => { h.IntersectWith(e); return h; });
                     }
                 }
             }
 
-            // Find intersections.
-            foreach (var field in fields)
-            {
-                field.Intersection = field.Possibles.Skip(1).Aggregate(new HashSet<int>(field.Possibles.First()),(h, e) => { h.IntersectWith(e); return h; });
-            }
-
-            // Find uniques.
+            // Determine field order and calculate solution.
             var order = new int[fields.Count];
-            for (var i = 0; i < order.Length; i++)
-            {
-                order[i] = -1;
-            }
+            Array.Fill(order, -1);
             
             while (order.Where(x => x == -1).Count() > 0)
             {
@@ -91,14 +83,13 @@ namespace AdventOfCode2020.Day16
                         continue;
                     }
 
-                    // Remove used possibilities.
-                    foreach (var o in order)
+                    if (fields[i].Intersection.Count != 1)
                     {
-                        if (fields[i].Intersection.Count == 1)
+                        // Remove used possibilities.
+                        foreach (var o in order)
                         {
-                            break;
+                            fields[i].Intersection.Remove(o);
                         }
-                        fields[i].Intersection.Remove(o);
                     }
 
                     // Only one possibility, so note it down.
