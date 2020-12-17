@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
-using System.Runtime.Serialization.Formatters.Binary;
 
 namespace AdventOfCode2020.Day17
 {
@@ -26,8 +24,6 @@ namespace AdventOfCode2020.Day17
             for (var cycle = 1; cycle < 7; cycle++)
             {
                 Console.WriteLine($"Cycle {cycle} starting...");
-                var start = DateTime.UtcNow;
-
                 var newGrid = new List<List<char[]>>();
                 for (var z = -1; z < grid.Count + 1; z++)
                 {
@@ -103,17 +99,7 @@ namespace AdventOfCode2020.Day17
                     }
                     newGrid.Add(layer);
                 }
-
                 grid = newGrid;
-
-                var a = 0;
-                foreach (var layer in grid) {
-                    foreach (var row in layer)
-                    {
-                        a += row.Count(x => x == '#');
-                    }
-                }
-                Console.WriteLine($"{a} active after cycle {cycle}. ({(DateTime.UtcNow - start).TotalSeconds} seconds)");
             }
 
             foreach (var layer in grid) {
@@ -143,15 +129,6 @@ namespace AdventOfCode2020.Day17
                 z0.Add(line.ToCharArray());
             }
             grid.Add(z0);
-        }
-
-        private List<List<char[]>> CloneGrid(List<List<char[]>> grid)
-        {
-            IFormatter formatter = new BinaryFormatter();
-            using var stream = new MemoryStream();
-            formatter.Serialize(stream, grid);
-            stream.Seek(0, SeekOrigin.Begin);
-            return (List<List<char[]>>)formatter.Deserialize(stream);
         }
     }
 }
