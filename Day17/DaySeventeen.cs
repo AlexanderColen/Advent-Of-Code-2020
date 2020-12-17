@@ -22,51 +22,21 @@ namespace AdventOfCode2020.Day17
         {
             var solution = 0;
 
-            // Run 7 cycles.
+            // Run 6 cycles.
             for (var cycle = 1; cycle < 7; cycle++)
             {
                 Console.WriteLine($"Cycle {cycle} starting...");
                 var start = DateTime.UtcNow;
-                // Expand grid with an extra inactives on all sides.
-                var newSize = grid[0].Count + 2;
-                var newGrid = new List<List<char[]>>(grid.Count + 2);
-                var lower = new List<char[]>(newSize);
-                var middle = new List<List<char[]>>(grid.Count);
-                var upper = new List<char[]>(newSize);
 
-                // Add inactives to either side of regular grid.
-                for (var layer = 0; layer < grid.Count; layer++)
+                var newGrid = new List<List<char[]>>();
+                for (var z = -1; z < grid.Count + 1; z++)
                 {
-                    var newLayer = new List<char[]>();
-                    foreach (var row in grid[layer])
+                    var layer = new List<char[]>();
+                    for (var y = -1; y < grid[0].Count + 1; y++)
                     {
-                        newLayer.Add(("." + string.Join("", row) + ".").ToCharArray());
-                    }
-                    middle.Add(newLayer);
-                }
-
-                // Fill either new side layer with empty values.
-                for (var i = 0; i < newGrid.Capacity; i++)
-                {
-                    var c = new char[newSize];
-                    Array.Fill(c, '.');
-                    lower.Add(c);
-                    upper.Add(c);
-                }
-
-                newGrid.Add(lower);
-                newGrid.AddRange(middle);
-                newGrid.Add(upper);
-
-                grid = CloneGrid(newGrid);
-
-                for (var z = 0; z < grid.Count; z++)
-                {
-                    for (var y = 0; y < grid[z].Count; y++)
-                    {
-                        for (var x = 0; x < grid[z][y].Length; x++)
+                        var row = new List<char>();
+                        for (var x = -1; x < grid[0][0].Length + 1; x++)
                         {
-                            // Console.WriteLine($"Checking ({z},{y},{x})");
                             // Determine neighbours.
                             var neighbours = new List<Tuple<int, int, int>>()
                             {
@@ -109,29 +79,33 @@ namespace AdventOfCode2020.Day17
                                 try
                                 {
                                     active += grid[neighbour.Item1][neighbour.Item2][neighbour.Item3] == '#' ? 1 : 0;
-                                } catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
+                                } catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException) { }
+                            }
+
+                            try
+                            {
+                                // Active only stays active if 2 or 3 neighbours are active.
+                                if (grid[z][y][x] == '#')
                                 {
-                                    // Console.WriteLine($"({neighbour.Item1},{neighbour.Item2},{neighbour.Item3}) does not exist.");
+                                    row.Add(active == 2 || active == 3 ? '#' : '.');
                                 }
-                            }
-
-                            // Console.WriteLine($"{active} active neighbours for ({z},{y},{x}).");
-
-                            // Active only stays active if 2 or 3 neighbours are active.
-                            if (grid[z][y][x] == '#' && !(active == 2 || active == 3))
+                                // Inactive only becomes active if 3 neighbours are active.
+                                else if (grid[z][y][x] == '.')
+                                {
+                                    row.Add(active == 3 ? '#' : '.');
+                                }
+                            } catch (Exception ex) when (ex is ArgumentOutOfRangeException || ex is IndexOutOfRangeException)
                             {
-                                newGrid[z][y][x] = '.';    
-                            }
-                            // Inactive only becomes active if 3 neighbours are active.
-                            else if (grid[z][y][x] == '.' && active == 3)
-                            {
-                                newGrid[z][y][x] = '#';
-                            }
+                                row.Add(active == 3 ? '#' : '.');
+                            }                            
                         }
+                        layer.Add(row.ToArray());
                     }
+                    newGrid.Add(layer);
                 }
 
                 grid = newGrid;
+
                 var a = 0;
                 foreach (var layer in grid) {
                     foreach (var row in layer)
