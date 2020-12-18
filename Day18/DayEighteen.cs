@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace AdventOfCode2020.Day18
@@ -31,7 +29,7 @@ namespace AdventOfCode2020.Day18
                     var re = new Regex(@"\([0-9+* ]+\)");
                     var match = re.Match(ex).ToString();
                     // Remove parentheses on both sides and evaluate.
-                    var sub = match.Substring(1, match.Length - 2);
+                    var sub = match[1..^1];
                     var evaluated = EvaluateLeftToRight(sub);
                     // Replace with evaluated part.
                     var regex = new Regex(Regex.Escape(match));
@@ -57,7 +55,7 @@ namespace AdventOfCode2020.Day18
                     var re = new Regex(@"\([0-9+* ]+\)");
                     var match = re.Match(ex).ToString();
                     // Remove parentheses on both sides and evaluate.
-                    var sub = match.Substring(1, match.Length - 2);
+                    var sub = match[1..^1];
                     var evaluated = EvaluateAdditionBeforeMultiplication(sub);
                     // Replace with evaluated part.
                     var regex = new Regex(Regex.Escape(match));
@@ -100,6 +98,7 @@ namespace AdventOfCode2020.Day18
                 {
                     outcome = Convert.ToUInt64(values[0].ToString()) * Convert.ToUInt64(values[1].ToString());
                 }
+                // Replace handled expression with outcome.
                 var regex = new Regex(Regex.Escape(match));
                 expression = regex.Replace(expression, outcome.ToString(), 1);
                 result = outcome;
@@ -111,6 +110,7 @@ namespace AdventOfCode2020.Day18
         private ulong EvaluateAdditionBeforeMultiplication(string expression)
         {
             ulong result = 0;
+            // Addition first.
             while (expression.Contains('+'))
             {
                 // Match first expression.
@@ -120,11 +120,13 @@ namespace AdventOfCode2020.Day18
                 var r2 = new Regex(@"[0-9]+");
                 var v = r2.Matches(m);
                 ulong o = Convert.ToUInt64(v[0].ToString()) + Convert.ToUInt64(v[1].ToString());
+                // Replace handled expression with outcome.
                 var r3 = new Regex(Regex.Escape(m));
                 expression = r3.Replace(expression, o.ToString(), 1);
                 result = o;
             }
-
+            
+            // Multiplication after.
             while (expression.Contains('*'))
             {
                 // Match first expression.
@@ -134,6 +136,7 @@ namespace AdventOfCode2020.Day18
                 var r2 = new Regex(@"[0-9]+");
                 var v = r2.Matches(m);
                 ulong o = Convert.ToUInt64(v[0].ToString()) * Convert.ToUInt64(v[1].ToString());
+                // Replace handled expression with outcome.
                 var r3 = new Regex(Regex.Escape(m));
                 expression = r3.Replace(expression, o.ToString(), 1);
                 result = o;
