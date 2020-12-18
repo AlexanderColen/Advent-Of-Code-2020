@@ -32,13 +32,13 @@ namespace AdventOfCode2020.Day18
                     var match = re.Match(ex).ToString();
                     // Remove parentheses on both sides and evaluate.
                     var sub = match.Substring(1, match.Length - 2);
-                    var evaluated = Evaluate(sub);
+                    var evaluated = EvaluateLeftToRight(sub);
                     // Replace with evaluated part.
                     var regex = new Regex(Regex.Escape(match));
                     ex = regex.Replace(ex, evaluated.ToString(), 1);
                 }
 
-                solution += Evaluate(ex);
+                solution += EvaluateLeftToRight(ex);
             }
 
             Console.WriteLine($"Puzzle 1 solution: {solution}");
@@ -46,7 +46,26 @@ namespace AdventOfCode2020.Day18
 
         public void Puzzle2()
         {
-            var solution = 0;
+            ulong solution = 0;
+
+            foreach (var expression in homework)
+            {
+                var ex = expression;
+                // Keep looping until no more parentheses are there.
+                while (ex.Contains('('))
+                {
+                    var re = new Regex(@"\([0-9+* ]+\)");
+                    var match = re.Match(ex).ToString();
+                    // Remove parentheses on both sides and evaluate.
+                    var sub = match.Substring(1, match.Length - 2);
+                    var evaluated = EvaluateAdditionBeforeMultiplication(sub);
+                    // Replace with evaluated part.
+                    var regex = new Regex(Regex.Escape(match));
+                    ex = regex.Replace(ex, evaluated.ToString(), 1);
+                }
+
+                solution += EvaluateAdditionBeforeMultiplication(ex);
+            }
 
             Console.WriteLine($"Puzzle 2 solution: {solution}");
         }
@@ -61,7 +80,7 @@ namespace AdventOfCode2020.Day18
             }
         }
 
-        private ulong Evaluate(string expression)
+        private ulong EvaluateLeftToRight(string expression)
         {
             ulong result = 0;
 
@@ -84,6 +103,40 @@ namespace AdventOfCode2020.Day18
                 var regex = new Regex(Regex.Escape(match));
                 expression = regex.Replace(expression, outcome.ToString(), 1);
                 result = outcome;
+            }
+
+            return result;
+        }
+
+        private ulong EvaluateAdditionBeforeMultiplication(string expression)
+        {
+            ulong result = 0;
+            while (expression.Contains('+'))
+            {
+                // Match first expression.
+                var r = new Regex(@"[0-9]+ \+ [0-9]+");
+                var m = r.Match(expression).ToString();
+                // Match separate values.
+                var r2 = new Regex(@"[0-9]+");
+                var v = r2.Matches(m);
+                ulong o = Convert.ToUInt64(v[0].ToString()) + Convert.ToUInt64(v[1].ToString());
+                var r3 = new Regex(Regex.Escape(m));
+                expression = r3.Replace(expression, o.ToString(), 1);
+                result = o;
+            }
+
+            while (expression.Contains('*'))
+            {
+                // Match first expression.
+                var r = new Regex(@"[0-9]+ \* [0-9]+");
+                var m = r.Match(expression).ToString();
+                // Match separate values.
+                var r2 = new Regex(@"[0-9]+");
+                var v = r2.Matches(m);
+                ulong o = Convert.ToUInt64(v[0].ToString()) * Convert.ToUInt64(v[1].ToString());
+                var r3 = new Regex(Regex.Escape(m));
+                expression = r3.Replace(expression, o.ToString(), 1);
+                result = o;
             }
 
             return result;
