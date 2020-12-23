@@ -95,6 +95,10 @@ namespace AdventOfCode2020
                         new Day22.DayTwentytwo();
                         break;
 
+                    case "23":
+                        new Day23.DayTwentythree();
+                        break;
+
                     default:
                         Console.Write("This Day's solution has not been implemented yet.");
                         break;
