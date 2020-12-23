@@ -95,21 +95,18 @@ namespace AdventOfCode2020.Day22
 
         private int PlayRecursiveCombat(Queue<int> q1, Queue<int> q2)
         {
-            var configurations1 = new List<string>();
-            var configurations2 = new List<string>();
+            var configurations = new List<string>();
 
             while (q1.Count != 0 && q2.Count != 0)
             {
-                var merged1 = string.Join("-", q1);
-                var merged2 = string.Join("-", q2);
+                var merged = $"1:{string.Join("", q1)}-2:{string.Join("", q2)}";
                 // If a previous configuration was equal to the current one, player 1 wins the (sub)game.
-                if (configurations1.Contains(merged1) || configurations2.Contains(merged2))
+                if (configurations.Contains(merged))
                 {
                     return 1;
                 } else
                 {
-                    configurations1.Add(merged1);
-                    configurations2.Add(merged2);
+                    configurations.Add(merged);
                 }
 
                 var c1 = q1.Dequeue();
